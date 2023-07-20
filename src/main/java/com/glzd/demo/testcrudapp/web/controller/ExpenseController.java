@@ -2,7 +2,6 @@ package com.glzd.demo.testcrudapp.web.controller;
 
 import com.glzd.demo.testcrudapp.business.ExpenseService.ExpenseService;
 import com.glzd.demo.testcrudapp.business.model.Expense;
-import com.glzd.demo.testcrudapp.data.ExpenseDataLoader;
 import com.glzd.demo.testcrudapp.data.ExpenseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping
 public class ExpenseController {
-
-
 
     @Autowired
     private final ExpenseService expenseService;
