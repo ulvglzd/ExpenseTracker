@@ -3,6 +3,7 @@ package com.glzd.demo.testcrudapp.business.ExpenseService;
 import com.glzd.demo.testcrudapp.business.model.Expense;
 import com.glzd.demo.testcrudapp.business.model.ExpenseType;
 import com.glzd.demo.testcrudapp.data.ExpenseRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,8 +20,10 @@ public class ExpenseService {
         return expenseRepository.save(entity);
     }
 
-    public Optional<Expense> findById(Long aLong) {
-        return expenseRepository.findById(aLong);
+    public Expense findById(Long id) {
+        return expenseRepository.findById(id).
+                orElseThrow(EntityNotFoundException::new);
+
     }
 
     public Iterable<Expense> findAll() {
