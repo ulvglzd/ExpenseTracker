@@ -64,15 +64,9 @@ public class ExpenseController {
     public String showUpdateExpenseForm(@PathVariable String id, Model model) {
         Long longId = Long.parseLong(id);
         // Add the expense object to the model to pre-populate the form fields
-        try {
-            Expense expense = expenseService.findById(longId).orElseThrow(EntityNotFoundException::new);
-            model.addAttribute("expense", expense);
-            return "updateExpense"; // Return the Thymeleaf template for the update expense page
-        } catch (EntityNotFoundException e) {
-            String errorMessage = "Sorry, Expense was not found.";
-            model.addAttribute("errorMessage", errorMessage);
-            return "errorPage";
-        }
+        Expense expense = expenseService.findById(longId);
+        model.addAttribute("expense", expense);
+        return "updateExpense"; // Return the Thymeleaf template for the update expense page
 
     }
 
