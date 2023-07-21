@@ -8,6 +8,5 @@ public class Helpers {
                 .concat(lowerCase
                         .substring(1)
                         .toLowerCase());
-
     }
 }
