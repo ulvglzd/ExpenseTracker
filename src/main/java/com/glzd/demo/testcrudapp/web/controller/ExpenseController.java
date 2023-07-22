@@ -1,15 +1,15 @@
 package com.glzd.demo.testcrudapp.web.controller;
 
-import com.glzd.demo.testcrudapp.business.ExpenseService.ExpenseService;
+import com.glzd.demo.testcrudapp.business.services.ExpenseService;
 import com.glzd.demo.testcrudapp.business.model.Expense;
-import com.glzd.demo.testcrudapp.data.ExpenseRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping
@@ -22,14 +22,16 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    @ModelAttribute("expenses")
-    public Iterable<Expense> getExpenses(){
-        return expenseService.findAll();
-    }
-
 
     @GetMapping("/expenses")
-    public String showExpenses(){
+    public String showExpenses(Model model){
+
+        Iterable<Expense> expenses = expenseService.findAll();
+        BigDecimal totalAmount = expenseService.getTotalAmount();
+
+        model.addAttribute("totalAmount", totalAmount);
+        model.addAttribute("expenses", expenses);
+
         return "expenses";
     }
 
@@ -72,16 +74,10 @@ public class ExpenseController {
 
     @PostMapping("/update")
     public String updateExpense(@ModelAttribute @Valid Expense expense, Errors errors) {
-        // Save the updated expense object to the database
         if (errors.hasErrors()) {
-            System.out.println("expense date = " + expense.getDate());
             return "updateExpense"; // Return the Thymeleaf template for the update expense page
         }
-        try {
-            expenseService.save(expense);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        expenseService.save(expense); // Save the updated expense object to the database
         return "redirect:/expenses";
     }
 
