@@ -75,3 +75,7 @@ table {
             text-align: center;
         }
 
+.ui-datepicker-calendar {
+    display: none;
+}
+

@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -42,15 +44,22 @@ public class ExpenseService {
         expenseRepository.deleteById(aLong);
     }
 
-    public BigDecimal getTotalAmount(){
-        Iterable<Expense> iterableExpenses = expenseRepository.findAll();
+    public BigDecimal getTotalAmount(Iterable<Expense> expenses){
         BigDecimal totalAmount = StreamSupport.
-                stream(iterableExpenses.spliterator(), false)
+                stream(expenses.spliterator(), false)
                 .toList()
                 .stream()
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return totalAmount;
+    }
+
+
+
+    public Iterable<Expense> getExpensesByMonth(int year, Month month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        return expenseRepository.findByDateBetween(startDate, endDate);
     }
 
 }
