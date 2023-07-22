@@ -1,12 +1,16 @@
-package com.glzd.demo.testcrudapp.business.ExpenseService;
+package com.glzd.demo.testcrudapp.business.services;
 
 import com.glzd.demo.testcrudapp.business.model.Expense;
-import com.glzd.demo.testcrudapp.business.model.ExpenseType;
 import com.glzd.demo.testcrudapp.data.ExpenseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ExpenseService {
@@ -36,6 +40,17 @@ public class ExpenseService {
 
     public void deleteById(Long aLong) {
         expenseRepository.deleteById(aLong);
+    }
+
+    public BigDecimal getTotalAmount(){
+        Iterable<Expense> iterableExpenses = expenseRepository.findAll();
+        BigDecimal totalAmount = StreamSupport.
+                stream(iterableExpenses.spliterator(), false)
+                .toList()
+                .stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalAmount;
     }
 
 }
