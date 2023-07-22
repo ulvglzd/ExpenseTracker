@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 public class ExpenseController {
 
-    @Autowired
+
     private final ExpenseService expenseService;
 
     public ExpenseController(ExpenseService expenseService) {
