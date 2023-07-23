@@ -1,11 +1,9 @@
-package com.glzd.demo.testcrudapp.data;
+package com.glzd.expenseTrackerApp.data;
 
-import com.glzd.demo.testcrudapp.business.model.Expense;
+import com.glzd.expenseTrackerApp.business.model.Expense;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 public interface ExpenseRepository extends CrudRepository<Expense, Long> {

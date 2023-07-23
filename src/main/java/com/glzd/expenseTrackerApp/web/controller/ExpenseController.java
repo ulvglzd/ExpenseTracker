@@ -1,10 +1,9 @@
-package com.glzd.demo.testcrudapp.web.controller;
+package com.glzd.expenseTrackerApp.web.controller;
 
-import com.glzd.demo.testcrudapp.business.services.ExpenseService;
-import com.glzd.demo.testcrudapp.business.model.Expense;
-import com.glzd.demo.testcrudapp.web.helpers.Helpers;
+import com.glzd.expenseTrackerApp.business.services.ExpenseService;
+import com.glzd.expenseTrackerApp.business.model.Expense;
+import com.glzd.expenseTrackerApp.web.helpers.Helpers;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -12,17 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.Month;
-import java.util.List;
 
 @Controller
 @RequestMapping
 public class ExpenseController {
 
-
+    private static final String helpersPath="(com.glzd.expenseTrackerApp.web.helpers.Helpers)";
     private final ExpenseService expenseService;
 
     public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
+    }
+
+    @ModelAttribute("helpersPath")
+    public String addHelpersPathToModel(){
+        return helpersPath;
     }
 
 

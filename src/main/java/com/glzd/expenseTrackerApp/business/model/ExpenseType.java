@@ -1,4 +1,4 @@
-package com.glzd.demo.testcrudapp.business.model;
+package com.glzd.expenseTrackerApp.business.model;
 
 public enum ExpenseType {
     HOME,

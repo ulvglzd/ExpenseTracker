@@ -1,20 +1,17 @@
-.navbar {
-                margin-right: 12px;
-                margin-left: 12px;
-                border: 0;
-                border-radius: 10px;
-                background: #E8CBC0;  /* fallback for old browsers */
-                background: -webkit-linear-gradient(to right, #636FA4, #E8CBC0);  /* Chrome 10-25, Safari 5.1-6 */
-                background: linear-gradient(to right, #636FA4, #E8CBC0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-                padding: 10px
 
-                }
-.body {
-        background: #E8CBC0;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #636FA4, #E8CBC0);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #636FA4, #E8CBC0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+body {
+    --s: 200px; /* control the size */
+    --c1: #1d1d1d;
+    --c2: #4e4f51;
+    --c3: #3c3c3c;
 
+    background:
+            repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 180deg)
+            calc(.5*var(--s)) calc(.5*var(--s)*0.577),
+            repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 180deg);
+    background-size: var(--s) calc(var(--s)*0.577);
 }
+
 
 #container {
             display: flex;
@@ -77,5 +74,20 @@ table {
 
 .ui-datepicker-calendar {
     display: none;
+}
+
+.btn-sm {
+    width: 160px; /* Set the desired width */
+    height: 55px; /* Set the desired height */
+    font-size: 14px; /* Set the font size */
+}
+
+.btn-shadow {
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+
+.form-rounded {
+    border-radius: 10px;
 }
 

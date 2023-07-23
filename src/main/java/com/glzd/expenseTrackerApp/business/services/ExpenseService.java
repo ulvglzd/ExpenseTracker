@@ -1,17 +1,13 @@
-package com.glzd.demo.testcrudapp.business.services;
+package com.glzd.expenseTrackerApp.business.services;
 
-import com.glzd.demo.testcrudapp.business.model.Expense;
-import com.glzd.demo.testcrudapp.data.ExpenseRepository;
+import com.glzd.expenseTrackerApp.business.model.Expense;
+import com.glzd.expenseTrackerApp.data.ExpenseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service

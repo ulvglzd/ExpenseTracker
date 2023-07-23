@@ -1,4 +1,4 @@
-package com.glzd.demo.testcrudapp.web.controller;
+package com.glzd.expenseTrackerApp.web.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.ui.Model;

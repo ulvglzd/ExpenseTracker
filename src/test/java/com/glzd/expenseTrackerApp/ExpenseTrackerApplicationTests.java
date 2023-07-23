@@ -1,10 +1,10 @@
-package com.glzd.demo.testcrudapp;
+package com.glzd.expenseTrackerApp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TestCrudAppApplicationTests {
+class ExpenseTrackerApplicationTests {
 
 	@Test
 	void contextLoads() {

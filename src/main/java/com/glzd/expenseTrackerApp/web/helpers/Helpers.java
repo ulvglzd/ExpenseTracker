@@ -1,4 +1,4 @@
-package com.glzd.demo.testcrudapp.web.helpers;
+package com.glzd.expenseTrackerApp.web.helpers;
 
 
 public class Helpers {

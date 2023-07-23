@@ -5,31 +5,41 @@
     <title>Expenses</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
 </head>
 <body class="body">
 
 <div class="container-fluid" id="container">
     <div class="left-column">
         <div class="container-sm">
-
+            <div><br></div>
+                <h3>Filter <img width="30" height="30" src="https://img.icons8.com/ios-filled/50/filter--v1.png" alt="filter--v1"/></h3>
             <div class="mb-3">
                 <form th:action="@{/expenses/month}" method="get">
                     <label class="form-label" for="year">Select Year:</label>
-                    <input class="form-control form-control-sm" type="number" id="year" name="year" value="2023" required>
+                    <input class="form-control form-control-sm form-rounded" type="number" id="year" name="year" value="2023" required>
+                    <div><p></p></div>
                     <label class="form-label" for="month">Select Month:</label>
-                    <select class="form-select form-select-sm" id="month" name="month">
+                    <select class="form-select form-select-sm form-rounded" id="month" name="month">
                         <option th:each="month : ${T(java.time.Month).values()}"
                                 th:value="${month}"
-                                th:text="${month}"></option>
+                                th:text="${T(com.glzd.expenseTrackerApp.web.helpers.Helpers).toSentenceCase(month.toString())}"></option>
                     </select>
                     <br>
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Show Expenses</button>
+                    <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Show Expenses</button>
                 </form>
             </div>
 
             <div class="mb-3">
                 <form th:action="@{/expenses}" method="get">
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Show All Expenses</button>
+                    <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Show All Expenses</button>
                 </form>
             </div>
         </div>
@@ -37,10 +47,12 @@
 
     <div class="center-column">
         <div><br></div>
-        <div class="container-sm">
-
+        <div class="container-sm" th:if="${expenses.isEmpty()}">
+            <h4>No expenses for the date you picked.</h4>
+        </div>
+        <div class="container-sm" th:unless="${expenses.isEmpty()}">
             <h3 class="tableHead" th:text="(${year} != null and ${month} != null) ? 'Expenses in ' + ${month} + ' ' + ${year} : 'All expenses'">Expenses</h3>
-            <table class="table" id="data-table">
+            <table class="table table-hover" id="data-table">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -57,23 +69,23 @@
                     <td th:text="${expense.id}"></td>
                     <td th:text="${expense.name}"></td>
                     <td th:text="${expense.expenseType}"></td>
-                    <td th:text="${expense.amount}"></td>
+                    <td th:text="${{expense.amount}}"></td>
                     <td th:text="${expense.date}"></td>
                     <td>
                         <!-- Button to open the update modal with Thymeleaf attributes -->
                         <a th:href="@{/update/{id}(id=${expense.id})}" >
-                            <img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1"/>
+                            <img width="25" height="25" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1"/>
                         </a>
                     </td>
                     <td>
                         <form th:action="@{/expenses/delete/individual/{id}(id=${expense.id})}" th:method="post">
-                            <input type="image" src="https://img.icons8.com/ios-glyphs/30/filled-trash.png" alt="filled-trash" />
+                            <input width="25" height="25" type="image" src="https://img.icons8.com/ios-glyphs/30/filled-trash.png" alt="filled-trash" />
                         </form>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: right;"><strong>Total Expense:</strong></td>
-                    <td><strong>&#36;[[${totalAmount}]]</strong></td>
+                    <td><strong>&#36;[[${{totalAmount}}]]</strong></td>
                 </tr>
                 </tbody>
             </table>
@@ -90,7 +102,7 @@
 
                 <div class="mb-3"> <!--name of expense-->
                     <label for="name"  class="form-label">Name of expense</label>
-                    <input type="text" id="name" class="form-control" th:field="*{name}"  th:errorclass="is-invalid" aria-describedby="nameHelp">
+                    <input type="text" id="name" class="form-control form-rounded" th:field="*{name}"  th:errorclass="is-invalid" aria-describedby="nameHelp">
                     <div id="validationName" class="invalid-feedback" th:errors="*{name}">
                     </div>
                 </div>
@@ -98,10 +110,10 @@
                 <!--type of expense-->
                 <div class="mb-3">
                     <label class="form-label" for="expenseType">Type of expense</label>
-                    <select class="form-select" id="expenseType" th:field="*{expenseType}" th:errorclass="is-invalid" >
+                    <select class="form-select form-rounded" id="expenseType" th:field="*{expenseType}" th:errorclass="is-invalid" >
                         <option selected th:value="${expenseType}">Choose the type of expense </option>
-                        <option th:each="expenseType : ${T(com.glzd.demo.testcrudapp.business.model.ExpenseType).values()}"
-                                th:value="${expenseType}" th:text="${T(com.glzd.demo.testcrudapp.web.helpers.Helpers).toSentenceCase(expenseType.toString())}" >
+                        <option th:each="expenseType : ${T(com.glzd.expenseTrackerApp.business.model.ExpenseType).values()}"
+                                th:value="${expenseType}" th:text="${T(com.glzd.expenseTrackerApp.web.helpers.Helpers).toSentenceCase(expenseType.toString())}" >
                         </option>
                     </select>
                     <div id="validationExpenseType" class="invalid-feedback" th:errors="*{expenseType}">
@@ -111,19 +123,19 @@
 
                 <div class="mb-3"> <!--amount-->
                     <label for="amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="amount" th:field="*{amount}" th:errorclass="is-invalid">
+                    <input type="number" class="form-control form-rounded" id="amount" th:field="*{amount}" th:errorclass="is-invalid">
                     <div id="validationAmount" class="invalid-feedback" th:errors="*{amount}">
                     </div>
                 </div>
 
                 <div class="mb-3"> <!--date-->
                     <label for="date" class="form-label">Date of birth</label>
-                    <input type="date" class="form-control" id="date" th:field="*{date}" th:errorclass="is-invalid">
+                    <input type="date" class="form-control form-rounded" id="date" th:field="*{date}" th:errorclass="is-invalid">
                     <div id="validationDate" class="invalid-feedback" th:errors="*{date}">
                     </div>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary">Add expense</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Add expense</button>
             </form>
         </div>
     </div>
