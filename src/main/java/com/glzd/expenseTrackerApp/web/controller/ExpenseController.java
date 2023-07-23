@@ -16,22 +16,17 @@ import java.time.Month;
 @RequestMapping
 public class ExpenseController {
 
-    private static final String helpersPath="(com.glzd.expenseTrackerApp.web.helpers.Helpers)";
     private final ExpenseService expenseService;
 
     public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
 
-    @ModelAttribute("helpersPath")
-    public String addHelpersPathToModel(){
-        return helpersPath;
-    }
-
 
     @GetMapping("/expenses")
     public String showExpenses(Model model){
-        populateExpensesData(model);
+        Iterable<Expense> expenses = expenseService.findAll();
+        populateExpensesData(model, expenses);
         return "/expenses";
     }
 
@@ -40,8 +35,8 @@ public class ExpenseController {
         return new Expense();
     }
 
-    private void populateExpensesData(Model model) {
-        Iterable<Expense> expenses = expenseService.findAll();
+    //populate expenses fed into method and their total amount into model
+    private void populateExpensesData(Model model, Iterable<Expense> expenses) {
         BigDecimal totalAmount = expenseService.getTotalAmount(expenses);
 
         model.addAttribute("totalAmount", totalAmount);
@@ -58,9 +53,9 @@ public class ExpenseController {
     @PostMapping("/AddExpense")
     public String addExpense(@Valid Expense expense, Errors errors, Model model){
         if (errors.hasErrors()) {
-            // If there are validation errors, add the expenses data to the model
-            populateExpensesData(model);
-            return "expenses";
+            Iterable<Expense> expenses = expenseService.findAll();
+            populateExpensesData(model, expenses); // If there are validation errors, add the expenses data to the model
+            return "expenses"; //returns same page to keep data in form fields
         }
         expenseService.save(expense);
         return "redirect:/expenses";
@@ -94,6 +89,9 @@ public class ExpenseController {
         String monthToDisplay = null;
         String yearToDisplay = null;
 
+        /* if there is a time interval input from user pulls expenses
+        specific to that period of time else pulls all expenses from db
+         */
         if (year != null && month != null) {
             expenses = expenseService.getExpensesByMonth(year, month);
             monthToDisplay = Helpers.toSentenceCase(month.toString());
@@ -103,10 +101,8 @@ public class ExpenseController {
             expenses = expenseService.findAll();
         }
 
-        BigDecimal totalAmount = expenseService.getTotalAmount(expenses);
+        populateExpensesData(model, expenses);
 
-        model.addAttribute("totalAmount", totalAmount);
-        model.addAttribute("expenses", expenses);
         model.addAttribute("month", monthToDisplay);
         model.addAttribute("year", yearToDisplay);
 
