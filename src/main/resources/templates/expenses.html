@@ -135,10 +135,8 @@
                 <div class="mb-3">
                     <label class="form-label" for="expenseType">Type of expense</label>
                     <select class="form-select form-rounded" id="expenseType" th:field="*{expenseType}" th:errorclass="is-invalid" >
-                        <option selected th:value="${expenseType}">Choose the type of expense </option>
-                        <option th:each="expenseType : ${T(com.glzd.expenseTrackerApp.business.model.ExpenseType).values()}"
-                                th:value="${expenseType}" th:text="${T(com.glzd.expenseTrackerApp.web.helpers.Helpers).toSentenceCase(expenseType.toString())}" >
-                        </option>
+                        <option selected value="">Choose the type of expense </option>
+                        <option th:each="expenseType : ${expenseTypes}" th:value="${expenseType.expenseCategory}" th:text="${expenseType.expenseCategory}">
                     </select>
                     <div id="validationExpenseType" class="invalid-feedback" th:errors="*{expenseType}">
                         Please select the expense types.
@@ -161,6 +159,10 @@
                 <br>
                 <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Add expense</button>
             </form>
+            <div>
+                <a th:href="@{/newExpenseType}" class="btn btn-primary">Add New Expense Type</a>
+            </div>
+
         </div>
     </div>
 </div>

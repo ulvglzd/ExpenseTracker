@@ -1,7 +1,9 @@
 package com.glzd.expenseTrackerApp.web.controller;
 
+import com.glzd.expenseTrackerApp.business.model.ExpenseType;
 import com.glzd.expenseTrackerApp.business.services.ExpenseService;
 import com.glzd.expenseTrackerApp.business.model.Expense;
+import com.glzd.expenseTrackerApp.business.services.ExpenseTypeService;
 import com.glzd.expenseTrackerApp.web.helpers.Helpers;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,9 +19,25 @@ import java.time.Month;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpenseTypeService expenseTypeService;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, ExpenseTypeService expenseTypeService) {
         this.expenseService = expenseService;
+        this.expenseTypeService = expenseTypeService;
+    }
+
+    @GetMapping("/newExpenseType")
+    public String showExpenseTypes(){
+        return "newExpenseType";
+    }
+
+    @PostMapping("/newExpenseType")
+    public String addExpenseType(@Valid ExpenseType expenseType, Errors errors){
+        if (errors.hasErrors()) {
+            return "newExpenseType"; //returns same page to keep data in form fields
+        }
+        expenseTypeService.save(expenseType);
+        return "redirect:/expenses";
     }
 
 
@@ -35,10 +53,16 @@ public class ExpenseController {
         return new Expense();
     }
 
+    @ModelAttribute
+    public ExpenseType getExpenseType(){
+        return new ExpenseType();
+    }
+
     //populate expenses fed into method and their total amount into model
     private void populateExpensesData(Model model, Iterable<Expense> expenses) {
         BigDecimal totalAmount = expenseService.getTotalAmount(expenses);
-
+        Iterable<ExpenseType> expenseTypes = expenseTypeService.findAll();
+        model.addAttribute("expenseTypes", expenseTypes);
         model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("expenses", expenses);
     }
@@ -66,6 +90,8 @@ public class ExpenseController {
         Long longId = Long.parseLong(id);
         // Add the expense object to the model to pre-populate the form fields
         Expense expense = expenseService.findById(longId);
+        Iterable<ExpenseType> expenseTypes = expenseTypeService.findAll();
+        model.addAttribute("expenseTypes", expenseTypes);
         model.addAttribute("expense", expense);
         return "updateExpense"; // Return the Thymeleaf template for the update expense page
 

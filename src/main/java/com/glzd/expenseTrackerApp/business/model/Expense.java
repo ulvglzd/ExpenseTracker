@@ -26,9 +26,8 @@ public class Expense {
     @NotEmpty(message = "Please specify the name of expense")
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Please specify the type of expense")
-    private ExpenseType expenseType;
+    @NotEmpty(message = "Please specify the name of expense")
+    private String expenseType;
 
     @DecimalMin(value = "0.0", inclusive = false)
     @Digits(integer=15, fraction=2)

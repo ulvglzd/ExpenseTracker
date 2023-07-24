@@ -1,8 +1,6 @@
 
 body {
-
-        background: #ffffff
-
+        background-color: #2d2d2d
 }
 
 
@@ -19,9 +17,54 @@ body {
         color: #333;
 }
 
+.center-column {
+        display: flex;
+        justify-content: center; /* Horizontally center the content */
+        align-items: center; /* Vertically center the content */
+        height: 100%;
+}
+
+
+.newExpenseContent {
+        height: 350px;
+        width: 400px;
+        background-image: linear-gradient( 174.2deg,  rgba(255,244,228,1) 7.1%, rgba(240,246,238,1) 67.4% );
+        border: 0;
+        border-radius: 20px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 16px;
+
+}
+
 #container {
         display: flex;
         justify-content: center; /* Horizontally center the container */
-        min-height: 70vh;
+        align-items: center;
+        min-height: 100vh;
 }
+
+.btn-sm {
+        width: 130px; /* Set the desired width */
+        height: 40px; /* Set the desired height */
+        font-size: 17px; /* Set the font size */
+}
+
+.btn-shadow {
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+        border-radius: 10px;
+}
+
+.form-rounded {
+        border-radius: 10px;
+}
+
+.cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+}
+
+
+
 

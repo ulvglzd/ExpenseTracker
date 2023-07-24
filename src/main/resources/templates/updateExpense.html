@@ -36,9 +36,7 @@
                     <label class="form-label" for="expenseType">Type of expense</label>
                     <select class="form-select" id="expenseType" th:field="*{expenseType}" th:errorclass="is-invalid" >
                         <option selected disabled value="">Choose the type of expense </option>
-                        <option th:each="expenseType : ${T(com.glzd.expenseTrackerApp.business.model.ExpenseType).values()}"
-                                th:value="${expenseType}" th:text="${T(com.glzd.expenseTrackerApp.web.helpers.Helpers).toSentenceCase(expenseType.toString())}" >
-                        </option>
+                        <option th:each="expenseType : ${expenseTypes}" th:value="${expenseType.expenseCategory}" th:text="${expenseType.expenseCategory}">
                     </select>
                     <div id="validationExpenseType" class="invalid-feedback" th:errors="*{expenseType}">
                     </div>
@@ -59,7 +57,7 @@
                 </div>
 
                 <br>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Save changes</button>
             </form>
         </div>
         <!--   ---------------------------------------------------------------->

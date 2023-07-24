@@ -1,11 +1,24 @@
 package com.glzd.expenseTrackerApp.business.model;
 
 
-public enum ExpenseType {
-    HOME,
-    FOOD,
-    LOAN,
-    ENTERTAINMENT,
-    TRAVEL,
-    BILLS,
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExpenseType {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotEmpty(message = "Please specify the type of expense")
+    private String expenseCategory;
+
+
 }
