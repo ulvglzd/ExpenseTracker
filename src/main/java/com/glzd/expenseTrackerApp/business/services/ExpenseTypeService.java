@@ -1,7 +1,10 @@
 package com.glzd.expenseTrackerApp.business.services;
 
 import com.glzd.expenseTrackerApp.business.model.ExpenseType;
+import com.glzd.expenseTrackerApp.business.services.exceptions.ExpenseTypeAlreadyExistsException;
 import com.glzd.expenseTrackerApp.data.ExpenseTypeRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,19 +20,27 @@ public class ExpenseTypeService {
         this.expenseTypeRepository = expenseTypeRepository;
     }
 
-    public ExpenseType save(ExpenseType entity) {
+    public ExpenseType save(ExpenseType entity) throws ExpenseTypeAlreadyExistsException {
+        if (expenseTypeRepository.existsByExpenseCategoryIgnoreCase(entity.getExpenseCategory())){
+            throw new ExpenseTypeAlreadyExistsException("Expense type with name '" + entity.getExpenseCategory() + "' already exists.");
+        }
         return expenseTypeRepository.save(entity);
+
+    }
+
+    //ensuring there is at least one expense type in the dropdown list
+    @PostConstruct
+    public void init() {
+        Iterable<ExpenseType> allExpenses = expenseTypeRepository.findAll();
+        if (((Collection<?>) allExpenses).isEmpty()) {
+            ExpenseType defaultExpenseType = new ExpenseType(null, "Kommunal");
+            expenseTypeRepository.save(defaultExpenseType);
+        }
     }
 
 
     public Iterable<ExpenseType> findAll() {
-        Iterable<ExpenseType> allExpenses = expenseTypeRepository.findAll();
-        if (((Collection<?>) allExpenses).size() != 0){
-            return allExpenses;
-        }
-        else {
-           return List.of(expenseTypeRepository.save(new ExpenseType(null, "Kommunal")));
-        }
+        return expenseTypeRepository.findAll();
     }
 
     public void deleteById(Long aLong) {

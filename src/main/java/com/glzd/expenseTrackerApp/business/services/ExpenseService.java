@@ -4,6 +4,7 @@ import com.glzd.expenseTrackerApp.business.model.Expense;
 import com.glzd.expenseTrackerApp.data.ExpenseRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

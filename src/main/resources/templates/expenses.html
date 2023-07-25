@@ -48,10 +48,11 @@
             <div class="mb-3">
                 <form th:action="@{/expenses/month}" method="get">
                     <label class="form-label" for="year">Select Year:</label>
-                    <input class="form-control form-control-sm form-rounded" type="number" id="year" name="year" value="2023" required>
+                    <input class="form-control form-control-sm form-rounded" type="number" id="year" name="year" value="">
                     <div><p></p></div>
                     <label class="form-label" for="month">Select Month:</label>
                     <select class="form-select form-select-sm form-rounded" id="month" name="month">
+                        <option selected value="">Select the month</option>
                         <option th:each="month : ${T(java.time.Month).values()}"
                                 th:value="${month}"
                                 th:text="${T(com.glzd.expenseTrackerApp.web.helpers.Helpers).toSentenceCase(month.toString())}"></option>

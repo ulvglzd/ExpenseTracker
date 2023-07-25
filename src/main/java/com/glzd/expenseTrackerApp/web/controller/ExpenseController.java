@@ -4,6 +4,7 @@ import com.glzd.expenseTrackerApp.business.model.ExpenseType;
 import com.glzd.expenseTrackerApp.business.services.ExpenseService;
 import com.glzd.expenseTrackerApp.business.model.Expense;
 import com.glzd.expenseTrackerApp.business.services.ExpenseTypeService;
+import com.glzd.expenseTrackerApp.business.services.exceptions.ExpenseTypeAlreadyExistsException;
 import com.glzd.expenseTrackerApp.web.helpers.Helpers;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -69,8 +70,8 @@ public class ExpenseController {
         }
         try {
             expenseTypeService.save(expenseType);
-        } catch (DataIntegrityViolationException e) {
-            model.addAttribute("errorMessage", "You have already added this category");
+        } catch (ExpenseTypeAlreadyExistsException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "newExpenseType";
         }
         return "redirect:/newExpenseType";
