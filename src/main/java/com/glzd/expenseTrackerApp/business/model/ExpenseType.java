@@ -18,6 +18,7 @@ public class ExpenseType {
     private Long id;
 
     @NotEmpty(message = "Please specify the type of expense")
+    @Column(unique = true)
     private String expenseCategory;
 
 

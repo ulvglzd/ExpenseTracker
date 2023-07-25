@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -26,6 +29,10 @@ public class ExpenseService {
         return expenseRepository.findById(id).
                 orElseThrow(EntityNotFoundException::new);
 
+    }
+
+    public List<Expense> getAllExpensesSortedByCreationDate() {
+        return expenseRepository.findAllByOrderByCreationDateDesc();
     }
 
     public Iterable<Expense> findAll() {

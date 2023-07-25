@@ -6,6 +6,7 @@ import com.glzd.expenseTrackerApp.business.model.Expense;
 import com.glzd.expenseTrackerApp.business.services.ExpenseTypeService;
 import com.glzd.expenseTrackerApp.web.helpers.Helpers;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -26,26 +27,17 @@ public class ExpenseController {
         this.expenseTypeService = expenseTypeService;
     }
 
-    @GetMapping("/newExpenseType")
-    public String showExpenseTypes(){
-        return "newExpenseType";
-    }
-
-    @PostMapping("/newExpenseType")
-    public String addExpenseType(@Valid ExpenseType expenseType, Errors errors){
-        if (errors.hasErrors()) {
-            return "newExpenseType"; //returns same page to keep data in form fields
-        }
-        expenseTypeService.save(expenseType);
-        return "redirect:/expenses";
-    }
-
 
     @GetMapping("/expenses")
     public String showExpenses(Model model){
-        Iterable<Expense> expenses = expenseService.findAll();
+        Iterable<Expense> expenses = expenseService.getAllExpensesSortedByCreationDate();
         populateExpensesData(model, expenses);
         return "/expenses";
+    }
+
+    @ModelAttribute("expenseTypes")
+    public Iterable<ExpenseType> getExpenseTypes() {
+        return expenseTypeService.findAll();
     }
 
     @ModelAttribute
@@ -61,10 +53,27 @@ public class ExpenseController {
     //populate expenses fed into method and their total amount into model
     private void populateExpensesData(Model model, Iterable<Expense> expenses) {
         BigDecimal totalAmount = expenseService.getTotalAmount(expenses);
-        Iterable<ExpenseType> expenseTypes = expenseTypeService.findAll();
-        model.addAttribute("expenseTypes", expenseTypes);
         model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("expenses", expenses);
+    }
+
+    @GetMapping("/newExpenseType")
+    public String showExpenseTypes(){
+        return "/newExpenseType";
+    }
+
+    @PostMapping("/newExpenseType")
+    public String addExpenseType(@Valid ExpenseType expenseType, Errors errors, Model model){
+        if (errors.hasErrors()) {
+            return "newExpenseType"; //returns same page to keep data in form fields
+        }
+        try {
+            expenseTypeService.save(expenseType);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("errorMessage", "You have already added this category");
+            return "newExpenseType";
+        }
+        return "redirect:/newExpenseType";
     }
 
 
@@ -74,10 +83,16 @@ public class ExpenseController {
         return "redirect:/expenses";
     }
 
+    @PostMapping(value = "newExpenseType/delete/{id}")
+    public String deleteExpenseType(@PathVariable("id") Long id){
+        expenseTypeService.deleteById(id);
+        return "redirect:/newExpenseType";
+    }
+
     @PostMapping("/AddExpense")
     public String addExpense(@Valid Expense expense, Errors errors, Model model){
         if (errors.hasErrors()) {
-            Iterable<Expense> expenses = expenseService.findAll();
+            Iterable<Expense> expenses = expenseService.getAllExpensesSortedByCreationDate();
             populateExpensesData(model, expenses); // If there are validation errors, add the expenses data to the model
             return "expenses"; //returns same page to keep data in form fields
         }
@@ -90,8 +105,6 @@ public class ExpenseController {
         Long longId = Long.parseLong(id);
         // Add the expense object to the model to pre-populate the form fields
         Expense expense = expenseService.findById(longId);
-        Iterable<ExpenseType> expenseTypes = expenseTypeService.findAll();
-        model.addAttribute("expenseTypes", expenseTypes);
         model.addAttribute("expense", expense);
         return "updateExpense"; // Return the Thymeleaf template for the update expense page
 
@@ -124,7 +137,7 @@ public class ExpenseController {
             yearToDisplay = year.toString();
 
         } else {
-            expenses = expenseService.findAll();
+            expenses = expenseService.getAllExpensesSortedByCreationDate();
         }
 
         populateExpensesData(model, expenses);

@@ -17,7 +17,7 @@
         <!-- Sidebar content -->
         <div class="updateCont">
             <h3 class="tableHead">Edit your expense:</h3>
-            <form  th:action="@{/update}" th:object="${expense}" method="post">
+            <form  th:action="@{/update}" th:object="${expense}" method="post" novalidate>
                 <div class="mb-3"> <!--id of expense-->
                     <input type="hidden" id="id" class="form-control" th:field="*{id}"  th:errorclass="is-invalid" aria-describedby="idHelp">
                     <div id="validationId" class="invalid-feedback" th:errors="*{id}">

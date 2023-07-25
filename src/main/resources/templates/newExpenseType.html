@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>New expense type</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" th:href="@{/css/updateStyle.css}" />
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
 
 </head>
 <body class="body">
@@ -13,9 +13,34 @@
 
   <div class="center-column">
     <div><br></div>
+
+    <div class="container-sm">
+      <h3 class="tableHead">Types of expense</h3>
+      <table class="table table-hover" id="data-table">
+        <thead>
+        <tr>
+          <th scope="col">Type of expense</th>
+          <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="expenseType : ${expenseTypes}">
+          <td th:text="${expenseType.expenseCategory}"></td>
+          <td>
+            <form th:action="@{/newExpenseType/delete/{id}(id=${expenseType.id})}" th:method="post">
+              <input width="25" height="25" type="image" src="https://img.icons8.com/ios-glyphs/30/filled-trash.png" alt="filled-trash" />
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="add-category-column">
+    <div><br></div>
     <div><br></div>
     <div class="newExpenseContent">
-      <br>
       <h3 class="tableHead">Add new expense type</h3>
       <br>
       <form  th:action="@{/newExpenseType}" th:object="${expenseType}" method="post">
@@ -26,11 +51,14 @@
           <div id="validationName" class="invalid-feedback" th:errors="*{expenseCategory}">
           </div>
         </div>
+        <div th:if="${errorMessage}" class="alert alert-danger">
+          <p th:text="${errorMessage}"></p>
+        </div>
 
         <br>
         <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Add</button>
 
-        <a th:href="@{/expenses}" class="btn btn-dark btn-sm btn-shadow cancel-btn">Cancel</a>
+        <a th:href="@{/expenses}" class="btn btn-dark btn-sm btn-shadow cancel-btn">Go back</a>
       </form>
 
     </div>

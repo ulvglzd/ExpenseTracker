@@ -82,6 +82,19 @@ table {
     font-size: 14px; /* Set the font size */
 }
 
+.container-sm h4 {
+    text-align: center;
+}
+
+.btn-add-new {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px; /* Set the desired width */
+    height: 30px; /* Set the desired height */
+    font-size: 12px; /* Set the font size */
+}
+
 .btn-shadow {
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
     border-radius: 10px;
@@ -89,5 +102,31 @@ table {
 
 .form-rounded {
     border-radius: 10px;
+}
+
+.cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.newExpenseContent {
+    height: 350px;
+    width: 400px;
+    background-image: linear-gradient( 174.2deg,  rgba(255,244,228,1) 7.1%, rgba(240,246,238,1) 67.4% );
+    border: 0;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 16px;
+
+}
+
+.add-category-column {
+    flex: 1.5;
+    border: 0; /* Set a border for the container */
+    border-radius: 10px;
+    background-image: linear-gradient( 174.2deg,  rgba(255,244,228,1) 7.1%, rgba(240,246,238,1) 67.4% );
+    padding: 10px;
+    margin-top: 5px
 }
 

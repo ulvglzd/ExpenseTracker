@@ -72,14 +72,13 @@
     <div class="center-column">
         <div><br></div>
         <div class="container-sm" th:if="${expenses.isEmpty()}">
-            <h4>No expenses for the date you picked.</h4>
+            <h4>No expenses found.</h4>
         </div>
         <div class="container-sm" th:unless="${expenses.isEmpty()}">
             <h3 class="tableHead" th:text="(${year} != null and ${month} != null) ? 'Expenses in ' + ${month} + ' ' + ${year} : 'All expenses'">Expenses</h3>
             <table class="table table-hover" id="data-table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Name of expense</th>
                     <th scope="col">Type of expense</th>
                     <th scope="col">Amount</th>
@@ -90,7 +89,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="expense : ${expenses}">
-                    <td th:text="${expense.id}"></td>
                     <td th:text="${expense.name}"></td>
                     <td th:text="${expense.expenseType}"></td>
                     <td th:text="${{expense.amount}}"></td>
@@ -108,8 +106,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="text-align: right;"><strong>Total Expense:</strong></td>
-                    <td><strong>&#36;[[${{totalAmount}}]]</strong></td>
+                    <td colspan="2" style="text-align: right;"><strong>Total Expense:</strong></td>
+                    <td><strong>[[${{totalAmount}}]]</strong></td>
                 </tr>
                 </tbody>
             </table>
@@ -122,7 +120,7 @@
         <div class="container-sm">
             <h3 class="tableHead">Add expense below:</h3>
 
-            <form  th:action="@{/AddExpense}" th:method="post" th:object="${expense}" >
+            <form  th:action="@{/AddExpense}" th:method="post" th:object="${expense}" novalidate >
 
                 <div class="mb-3"> <!--name of expense-->
                     <label for="name"  class="form-label">Name of expense</label>
@@ -143,6 +141,10 @@
                     </div>
                 </div>
 
+                <div class="mb-3">
+                <a th:href="@{/newExpenseType}" class="btn btn-outline-dark btn-add-new btn-shadow">Customize your types of expense</a>
+                </div>
+
                 <div class="mb-3"> <!--amount-->
                     <label for="amount" class="form-label">Amount</label>
                     <input type="number" class="form-control form-rounded" id="amount" th:field="*{amount}" th:errorclass="is-invalid">
@@ -159,9 +161,6 @@
                 <br>
                 <button type="submit" class="btn btn-outline-dark btn-sm btn-shadow">Add expense</button>
             </form>
-            <div>
-                <a th:href="@{/newExpenseType}" class="btn btn-primary">Add New Expense Type</a>
-            </div>
 
         </div>
     </div>

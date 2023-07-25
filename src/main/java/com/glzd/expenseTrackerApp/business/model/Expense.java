@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -36,6 +37,9 @@ public class Expense {
 
     @NotNull(message = "Date cannot be empty!")
     private LocalDate date;
+
+    @CreationTimestamp
+    private LocalDate creationDate;
 
 
 }
