@@ -4,11 +4,13 @@ import com.glzd.expenseTrackerApp.business.model.ExpenseType;
 import com.glzd.expenseTrackerApp.business.services.exceptions.ExpenseTypeAlreadyExistsException;
 import com.glzd.expenseTrackerApp.data.ExpenseTypeRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -18,6 +20,11 @@ public class ExpenseTypeService {
 
     public ExpenseTypeService(ExpenseTypeRepository expenseTypeRepository) {
         this.expenseTypeRepository = expenseTypeRepository;
+    }
+
+    public ExpenseType findById(Long id) {
+        return expenseTypeRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public ExpenseType save(ExpenseType entity) throws ExpenseTypeAlreadyExistsException {
@@ -43,8 +50,9 @@ public class ExpenseTypeService {
         return expenseTypeRepository.findAll();
     }
 
-    public void deleteById(Long aLong) {
-        expenseTypeRepository.deleteById(aLong);
+    public void deleteById(Long id) {
+        ExpenseType expenseTypeToBeDeleted = findById(id);
+        expenseTypeRepository.delete(expenseTypeToBeDeleted);
     }
 
     public void delete(ExpenseType entity) {

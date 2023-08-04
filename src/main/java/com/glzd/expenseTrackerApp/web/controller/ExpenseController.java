@@ -1,13 +1,20 @@
 package com.glzd.expenseTrackerApp.web.controller;
 
+import com.glzd.expenseTrackerApp.business.model.Expense;
 import com.glzd.expenseTrackerApp.business.model.ExpenseType;
 import com.glzd.expenseTrackerApp.business.services.ExpenseService;
-import com.glzd.expenseTrackerApp.business.model.Expense;
 import com.glzd.expenseTrackerApp.business.services.ExpenseTypeService;
 import com.glzd.expenseTrackerApp.business.services.exceptions.ExpenseTypeAlreadyExistsException;
 import com.glzd.expenseTrackerApp.web.helpers.Helpers;
 import jakarta.validation.Valid;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,17 +29,26 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
     private final ExpenseTypeService expenseTypeService;
+    private static final int PAGE_SIZE = 3;
 
     public ExpenseController(ExpenseService expenseService, ExpenseTypeService expenseTypeService) {
         this.expenseService = expenseService;
         this.expenseTypeService = expenseTypeService;
     }
 
+    @ModelAttribute("totalAmount")
+    public BigDecimal getTotalAmount(){
+        Iterable<Expense> expenses = expenseService.findAll();
+        return expenseService.getTotalAmount(expenses);
+    }
+
+    @ModelAttribute("expenses")
+    public Page<Expense> getExpenses(@PageableDefault(size = PAGE_SIZE) Pageable page){
+        return expenseService.findAll(page);
+    }
 
     @GetMapping("/expenses")
-    public String showExpenses(Model model){
-        Iterable<Expense> expenses = expenseService.getAllExpensesSortedByCreationDate();
-        populateExpensesData(model, expenses);
+    public String showExpenses(){
         return "/expenses";
     }
 
@@ -49,13 +65,6 @@ public class ExpenseController {
     @ModelAttribute
     public ExpenseType getExpenseType(){
         return new ExpenseType();
-    }
-
-    //populate expenses fed into method and their total amount into model
-    private void populateExpensesData(Model model, Iterable<Expense> expenses) {
-        BigDecimal totalAmount = expenseService.getTotalAmount(expenses);
-        model.addAttribute("totalAmount", totalAmount);
-        model.addAttribute("expenses", expenses);
     }
 
     @GetMapping("/newExpenseType")
@@ -91,15 +100,15 @@ public class ExpenseController {
     }
 
     @PostMapping("/AddExpense")
-    public String addExpense(@Valid Expense expense, Errors errors, Model model){
+    public String addExpense(@Valid Expense expense, Errors errors){
         if (errors.hasErrors()) {
-            Iterable<Expense> expenses = expenseService.getAllExpensesSortedByCreationDate();
-            populateExpensesData(model, expenses); // If there are validation errors, add the expenses data to the model
             return "expenses"; //returns same page to keep data in form fields
         }
         expenseService.save(expense);
+
         return "redirect:/expenses";
     }
+
 
     @GetMapping("/update/{id}")
     public String showUpdateExpenseForm(@PathVariable String id, Model model) {
@@ -112,7 +121,7 @@ public class ExpenseController {
     }
 
     @PostMapping("/update")
-    public String updateExpense(@ModelAttribute @Valid Expense expense, Errors errors) {
+    public String updateExpense(@Valid Expense expense, Errors errors) {
         if (errors.hasErrors()) {
             return "updateExpense"; // Return the Thymeleaf template for the update expense page
         }
@@ -120,33 +129,66 @@ public class ExpenseController {
         return "redirect:/expenses";
     }
 
-    //Get expenses by month
-    @GetMapping("/expenses/month")
-    public String showExpensesByMonth(@RequestParam(name = "year", required = false) Integer year,
-                                      @RequestParam(name = "month", required = false) Month month,
-                                      Model model) {
-        Iterable<Expense> expenses;
+    //Filtering the expenses by date and/or expense type
+    @GetMapping("/expenses/filter")
+    public String showFilteredExpenses(@RequestParam(name = "year", required = false) Integer year,
+                                       @RequestParam(name = "month", required = false) Month month,
+                                       @RequestParam(name = "expenseTypeFilter", required = false) String expenseType,
+                                       Model model, @PageableDefault(size = PAGE_SIZE) Pageable page) {
+
+        Page<Expense> expenses;
         String monthToDisplay = null;
         String yearToDisplay = null;
+        System.out.println(expenseType);
 
-        /* if there is a time interval input from user pulls expenses
-        specific to that period of time else pulls all expenses from db
-         */
-        if (year != null && month != null) {
-            expenses = expenseService.getExpensesByMonth(year, month);
+        // If all filters are provided (year, month, and expense type)
+        if (year != null && month != null && expenseType != null && !expenseType.isEmpty()) {
+            expenses = expenseService.getExpensesByYearMonthAndType(year, month, expenseType, page);
             monthToDisplay = Helpers.toSentenceCase(month.toString());
             yearToDisplay = year.toString();
-
-        } else {
-            expenses = expenseService.getAllExpensesSortedByCreationDate();
+        }
+        // If only year and month filters are provided
+        else if (year != null && month != null) {
+            expenses = expenseService.getExpensesByMonth(year, month, page);
+            monthToDisplay = Helpers.toSentenceCase(month.toString());
+            yearToDisplay = year.toString();
+        }
+        // If only expense type filter is provided
+        else if (expenseType != null && !expenseType.isEmpty()) {
+            expenses = expenseService.getExpensesByType(expenseType, page);
+        }
+        // If no filters are provided, show all expenses
+        else {
+            expenses = expenseService.findAll(page);
         }
 
-        populateExpensesData(model, expenses);
-
+        model.addAttribute("expenses", expenses);
         model.addAttribute("month", monthToDisplay);
         model.addAttribute("year", yearToDisplay);
+        model.addAttribute("expenseType", expenseType);
 
         return "expenses";
     }
+
+    @GetMapping("/downloadExpenses")
+    public ResponseEntity<Resource> downloadExpenses() {
+        // Get all expenses from the database
+        Iterable<Expense> expenses = expenseService.findAll();
+
+        // Convert expenses to a CSV format
+        String csvData = expenseService.convertToCSV(expenses);
+
+        // Set the CSV data as a ByteArrayResource
+        ByteArrayResource resource = new ByteArrayResource(csvData.getBytes());
+
+        // Return the CSV data as a downloadable file
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=expenses.csv")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .contentLength(resource.contentLength())
+                .body(resource);
+    }
+
+
 
 }

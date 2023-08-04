@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
@@ -39,7 +40,7 @@ public class Expense {
     private LocalDate date;
 
     @CreationTimestamp
-    private LocalDate creationDate;
+    private Timestamp creationDate;
 
 
 }
