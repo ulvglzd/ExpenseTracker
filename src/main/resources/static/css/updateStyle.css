@@ -59,6 +59,12 @@ body {
         border-radius: 10px;
 }
 
+.cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+}
+
 
 
 

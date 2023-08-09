@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GeneralExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
-    public String handleEntityNotFoundException(Model model) {
-        String errorMessage = "Oops! Something went wrong.";
-        model.addAttribute("errorMessage", errorMessage);
-        return "errorPage";
+    public String handleEntityNotFoundException(EntityNotFoundException e, Model model) {
+        String message = e.getMessage();
+        model.addAttribute("errorMessage", message);
+        return "error";
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

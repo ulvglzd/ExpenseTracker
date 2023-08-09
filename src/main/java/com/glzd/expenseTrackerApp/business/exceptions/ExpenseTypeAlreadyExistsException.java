@@ -1,4 +1,4 @@
-package com.glzd.expenseTrackerApp.business.services.exceptions;
+package com.glzd.expenseTrackerApp.business.exceptions;
 
 import org.springframework.dao.DataIntegrityViolationException;
 

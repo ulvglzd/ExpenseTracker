@@ -12,8 +12,11 @@
         <img th:src="@{/images/404errorImage.png}" class="centered-image" alt="error" width="600" height="600"/>
     </div>
     <div class="text-container">
-        <div class="big-text-container">
+        <div class="big-text-container" th:unless="${errorMessage}">
             <h1 style="text-align: center">404 Not Found</h1>
+        </div>
+        <div class="big-text-container" th:if="${errorMessage}">
+            <h1 th:text="${errorMessage}" style="text-align: center"></h1>
         </div>
         <div class="small-text-container">
             <h4>The content you are looking for might have been removed, had its name changed or is temporarily unavailable.</h4>
