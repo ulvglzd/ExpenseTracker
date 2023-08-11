@@ -5,7 +5,7 @@ Welcome to the Expense Tracker App repository! It is a simple web application wh
 ## Demo Video
 
 Check out this video to see a live demonstration of the Expense Tracker app:
-[![Expense Tracker Demo](https://drive.google.com/file/d/1DNsx84cdyD9IBxys9bfLf5VoNTf5Lnb3/view?usp=sharing)](https://youtu.be/IlUs0ESfFK4)
+[![Expense Tracker Demo](https://www.dropbox.com/scl/fi/5wmd48eklrcc5f19ci8p7/Budgetpal.jpg?rlkey=wmui89c3b9ka2s5b79g8ctpfa&dl=0)](https://youtu.be/IlUs0ESfFK4)
 
 ## Features
 
