@@ -1,22 +1,28 @@
 # Expense Tracker App
 
-Welcome to the Expense Tracker App repository! This web application allows users to manage and track their expenses easily. It's built using Spring Boot, Thymeleaf, and MySQL.
+Welcome to the Expense Tracker App repository! It is a simple web application which allows users to manage and track their expenses. 
 
 ## Features
 
-- CRUD operations for expenses and expense types.
+- Adding, updating, deleting operations for expenses.
 - Filtering expenses by year, month, and expense type.
+- Pagination
 - Customize your expense categories
-- Download expenses as CSV files.
+- Download expenses as CSV file.
 - Responsive design 
 
 ## Technologies Used
 
-- Java
-- Spring Boot
-- Thymeleaf
-- MySQL
-- HTML, CSS
+- Java 17.0
+- Spring Boot 3
+- Spring MVC
+- Spring Data JPA (for data access)
+- Hibernate (as the JPA implementation)
+- Thymeleaf (for server-side templating)
+- MySQL (as the database)
+- Maven (for build and dependency management)
+- HTML, CSS, Bootstrap
+- Server is Tomcat, built-in server of Spring Boot.
 
 ## Getting Started
 
