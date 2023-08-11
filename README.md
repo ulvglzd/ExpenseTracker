@@ -2,7 +2,13 @@
 
 Welcome to the Expense Tracker App repository! It is a simple web application which allows users to manage and track their expenses. 
 
+## Demo Video
+
+Check out this video to see a live demonstration of the Expense Tracker app:
+[![Expense Tracker Demo](https://drive.google.com/file/d/1DNsx84cdyD9IBxys9bfLf5VoNTf5Lnb3/view?usp=sharing)](https://youtu.be/IlUs0ESfFK4)
+
 ## Features
+
 - Adding, updating, deleting operations for expenses.
 - View summaries of expenses in a table, and a summary of the total amount spent.
 - Filtering expenses by year, month, and expense type.
