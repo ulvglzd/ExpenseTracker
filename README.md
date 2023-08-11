@@ -5,7 +5,7 @@ Welcome to the Expense Tracker App repository! It is a simple web application wh
 ## Demo Video
 
 Check out this video to see a live demonstration of the Expense Tracker app:
-[![Expense Tracker Demo](https://imgur.com/a/iro1R1H)](https://youtu.be/IlUs0ESfFK4)
+[![Expense Tracker Demo]](https://youtu.be/IlUs0ESfFK4)
 
 ## Features
 
